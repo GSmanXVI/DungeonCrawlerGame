@@ -1,4 +1,6 @@
 using System;
+using DungeonCrawlerGame.Objects;
+using DungeonCrawlerGame.Resources;
 
 namespace DungeonCrawlerGame.Map
 {
@@ -6,7 +8,7 @@ namespace DungeonCrawlerGame.Map
     {
         public static void LoadMap()
         {
-            Map = new int[,]
+            int [,] map = new int[,]
             {
                     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
                     {1,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,3,3,1},
@@ -39,18 +41,50 @@ namespace DungeonCrawlerGame.Map
                     {1,2,2,2,2,2,2,0,0,0,0,0,3,3,3,3,3,3,3,3,3,3,3,3,2,2,2,2,2,1},
                     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
             };
+
+            Map = new MapCell[30, 30];
+
+            for (int y = 0; y < map.GetLength(0); y++)
+            {
+                for (int x = 0; x < map.GetLength(1); x++)
+                {
+                    if (map[y, x] == 0)
+                    {
+                        Map[y, x] = new MapCell((int)Texture.Grass, true);
+                    }
+                    else if (map[y, x] == 1)
+                    {
+                        Map[y, x] = new MapCell((int)Texture.Wall, false);
+                    }
+                    else if (map[y, x] == 2)
+                    {
+                        Map[y, x] = new MapCell((int)Texture.Grass, false);
+                        Map[y, x].Object = new GameObject();
+                        Map[y, x].Object.Solid = true;
+                        Map[y, x].Object.Texture = (int)Texture.Tree;
+                    }
+                    else if (map[y, x] == 3)
+                    {
+                        Map[y, x] = new MapCell((int)Texture.Water, false);
+                    }
+                    else if (map[y, x] == 4)
+                    {
+                        Map[y, x] = new MapCell((int)Texture.Floor, true);
+                    }
+                }
+            }
         }
 
-        public static int[,] Map { get; set; }
+        public static MapCell[,] Map { get; set; }
 
         public static bool isEmpty(int x, int y)
         {
-            return Map[y, x] == 0;
+            return Map[y, x].IsEmpty && (!Map[y, x].Object?.Solid ?? true);
         }
 
         public static MapCell GetCell(int x, int y)
         {
-            throw new NotImplementedException();
+            return Map[y, x];
         }
     }
 }

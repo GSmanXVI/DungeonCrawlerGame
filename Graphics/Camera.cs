@@ -54,7 +54,7 @@ namespace DungeonCrawlerGame.Graphics
             Vector2 newPosition = Position + movePosition;
             Position = newPosition;
         }
-
+        
         public void AdjustZoom(float zoomAmount)
         {
             Zoom += zoomAmount;

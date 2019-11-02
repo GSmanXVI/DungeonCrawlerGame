@@ -1,30 +1,32 @@
-using Microsoft.Xna.Framework;
+using DungeonCrawlerGame.Map;
+using DungeonCrawlerGame.Objects;
 
 namespace DungeonCrawlerGame.Actors
 {
-    public class Actor
+    public class Actor : GameObject
     {
-        public int X { get; set; }
-        public int Y { get; set; }
-
         public void Move(Direction direction)
         {
+
             switch (direction)
             {
                 case Direction.Up:
-                    Y--;
+                    if (GameMap.isEmpty(X, Y - 1))
+                        Y--;
                     break;
                 case Direction.Down:
-                    Y++;
+                    if (GameMap.isEmpty(X, Y + 1))
+                        Y++;
                     break;
                 case Direction.Left:
-                    X--;
+                    if (GameMap.isEmpty(X - 1, Y))
+                        X--;
                     break;
                 case Direction.Right:
-                    X++;
+                    if (GameMap.isEmpty(X + 1, Y))
+                        X++;
                     break;
             }
         }
-        
     }
 }

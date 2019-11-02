@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using DungeonCrawlerGame.Actors;
 using DungeonCrawlerGame.Graphics;
 using DungeonCrawlerGame.Map;
+using DungeonCrawlerGame.Objects;
+using DungeonCrawlerGame.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -13,16 +15,9 @@ namespace DungeonCrawlerGame
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        public ResourceManager ResManager { get; set; } = new ResourceManager();
 
-        SpriteFont spriteFont;
-        Texture2D spriteSheet;
-
-        // List<Sprite> sprites = new List<Sprite>();
-
-        Dictionary<MapTexture, Sprite> mapSprites = new Dictionary<MapTexture, Sprite>();
-        Dictionary<ActorTexture, Sprite> actorSprites = new Dictionary<ActorTexture, Sprite>();
-
-        Player player = new Player();
+        Player player = new Player(15, 15);
 
         Camera camera;
 
@@ -43,22 +38,14 @@ namespace DungeonCrawlerGame
         protected override void Initialize()
         {
             GameMap.LoadMap();
+            camera.MoveCamera(new Vector2(player.X * 32, player.Y * 32));
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            spriteFont = Content.Load<SpriteFont>("Fonts/Consolas");
-            spriteSheet = Content.Load<Texture2D>("Sprites/spritesheet");
-
-            mapSprites.Add(MapTexture.Grass, new Sprite(spriteSheet, new Rectangle(448, 288, 32, 32)));
-            mapSprites.Add(MapTexture.Wall, new Sprite(spriteSheet, new Rectangle(0, 608, 32, 32)));
-            mapSprites.Add(MapTexture.Tree, new Sprite(spriteSheet, new Rectangle(1568, 160, 32, 32)));
-            mapSprites.Add(MapTexture.Water, new Sprite(spriteSheet, new Rectangle(32, 736, 32, 32)));
-            mapSprites.Add(MapTexture.Floor, new Sprite(spriteSheet, new Rectangle(544, 192, 32, 32)));
-
-            actorSprites.Add(ActorTexture.Player, new Sprite(spriteSheet, new Rectangle(1952, 2528, 32, 32)));
+            ResManager.InitResources(Content);
         }
 
         protected override void Update(GameTime gameTime)
@@ -67,25 +54,15 @@ namespace DungeonCrawlerGame
                 Exit();
 
             if (Keyboard.GetState().IsKeyDown(Keys.W))
-            {
                 player.Move(Direction.Up);
-                camera.MoveCamera(new Vector2(0, -32));
-            }
             if (Keyboard.GetState().IsKeyDown(Keys.S))
-            {
                 player.Move(Direction.Down);
-                camera.MoveCamera(new Vector2(0, 32));
-            }
             if (Keyboard.GetState().IsKeyDown(Keys.A))
-            {
                 player.Move(Direction.Left);
-                camera.MoveCamera(new Vector2(-32, 0));
-            }
             if (Keyboard.GetState().IsKeyDown(Keys.D))
-            {
                 player.Move(Direction.Right);
-                camera.MoveCamera(new Vector2(32, 0));
-            }
+
+            camera.Position = new Vector2(player.X * 32, player.Y * 32);
 
             camera.UpdateCamera(GraphicsDevice.Viewport);
 
@@ -107,11 +84,13 @@ namespace DungeonCrawlerGame
                     position.X = x * 32;
                     position.Y = y * 32;
 
-                    spriteBatch.Draw(mapSprites[(MapTexture)GameMap.Map[y, x]], position);
+                    spriteBatch.Draw(ResManager.GetSprite(GameMap.GetCell(x, y).Texture), position);
+                    if (GameMap.GetCell(x, y).Object != null)
+                        spriteBatch.Draw(ResManager.GetSprite(GameMap.GetCell(x, y).Object.Texture), position);
                 }
             }
 
-            spriteBatch.Draw(actorSprites[ActorTexture.Player], new Vector2(player.X * 32, player.Y * 32));
+            spriteBatch.Draw(ResManager.GetSprite(Resources.Texture.Player), new Vector2(player.X * 32, player.Y * 32));
 
             spriteBatch.End();
 
