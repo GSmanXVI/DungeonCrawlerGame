@@ -1,0 +1,21 @@
+[
+    {
+        "id": 0,
+        "name": "Grass",
+        "solid": false,
+        "appearances": [
+            { "X": 0, "Y": 0 },
+            { "X": 32, "Y": 0 },
+            { "X": 64, "Y": 0 }
+        ]
+    },
+    {
+        "id": 1,
+        "name": "Wall",
+        "solid": true,
+        "appearances": [
+            { "X": 0, "Y": 32 },
+            { "X": 32, "Y": 32 }
+        ]
+    }
+]

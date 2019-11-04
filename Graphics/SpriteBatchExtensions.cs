@@ -14,5 +14,10 @@ namespace DungeonCrawlerGame.Graphics
         {
             spriteBatch.Draw(sprite.Texture, position, sprite.Bounds, Color.White);
         }
+
+        public static void Draw(this SpriteBatch spriteBatch, Sprite sprite, Vector2 position, Rectangle rectangle, Color color)
+        {
+            spriteBatch.Draw(sprite.Texture, position, rectangle, color);
+        }
     }
 }

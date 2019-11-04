@@ -43,6 +43,7 @@ namespace DungeonCrawlerGame.Map
             };
 
             Map = new MapCell[30, 30];
+            var rand = new Random();
 
             for (int y = 0; y < map.GetLength(0); y++)
             {
@@ -50,11 +51,11 @@ namespace DungeonCrawlerGame.Map
                 {
                     if (map[y, x] == 0)
                     {
-                        Map[y, x] = new MapCell((int)Texture.Grass, true);
+                        Map[y, x] = new MapCell((int)Texture.Grass, true, rand.Next(0, 12));
                     }
                     else if (map[y, x] == 1)
                     {
-                        Map[y, x] = new MapCell((int)Texture.Wall, false);
+                        Map[y, x] = new MapCell((int)Texture.Wall, false, rand.Next(0, 6));
                     }
                     else if (map[y, x] == 2)
                     {
